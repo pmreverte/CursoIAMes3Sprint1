@@ -1,0 +1,54 @@
+<!--
+    Index view for Tasks. Displays a list of tasks with actions to create, edit, and delete them.
+    Uses Bootstrap for styling and Font Awesome for icons.
+-->
+
+@{
+    Layout = "_Layout";  
+}
+@model IEnumerable<Tareas.Task>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>Tasks</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Create New</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Description</td>
+                <td>  @* Status column with colored text *@
+                    @switch (item.Status)
+                    {
+                        case Tareas.TaskStatus.Pending:
+                            <span class="text-warning">Pending</span>
+                            break;
+                        case Tareas.TaskStatus.InProgress:
+                            <span class="text-primary">In Progress</span>
+                            break;
+                        case Tareas.TaskStatus.Completed:
+                            <span class="text-success">Completed</span>
+                            break;
+                    }
+                </td>
+                <td>@item.CreatedAt.ToLocalTime().ToString("g")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm"><i class="bi bi-pencil-square"></i> Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
